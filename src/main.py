@@ -25,7 +25,24 @@ def board_copy(board):
     return new_board
 
 #======================================================================
-
+neighborDict = {}
+adjacentDict = {}
+neighborPosL = []
+adjacentPosL = []
+for r in range(5):
+    for c in range(5):
+        neighborPosL = [(r, c - 1), (r, c + 1), (r - 1, c), (r + 1, c), (r - 1, c - 1), (r + 1, c + 1), (r - 1, c + 1), (r + 1, c - 1)]
+        if (r % 2 == 0 and c % 2 != 0) or (r % 2 != 0 and c % 2 == 0):
+            adjacentPosL = [(r - 1, c), (r, c - 1), (r, c + 1), (r + 1, c)]
+            adjacentPosL = list( filter(lambda x: (0 <= x[0] < 5) and (0 <= x[1] < 5), adjacentPosL) )
+            neighborPosL = list( filter(lambda x: (0 <= x[0] < 5) and (0 <= x[1] < 5), neighborPosL) )
+            neighborDict[r*5 + c] = neighborPosL
+            adjacentDict[r*5 + c] = adjacentPosL
+        else:
+            adjacentPosL = neighborPosL = list( filter(lambda x: (0 <= x[0] < 5) and (0 <= x[1] < 5), neighborPosL) )
+            adjacentDict[r*5 + c] = neighborDict[r*5 + c] = neighborPosL
+        
+        adjacentPosL = neighborPosL = []
 # Student SHOULD implement this function to change current state to new state properly
 def doit(move, state):
     new_state = board_copy(state)
@@ -66,52 +83,46 @@ def doit(move, state):
                 new_state[r1][c1] = ta
                 new_state[r2][c2] = ta
 
+    lst_dich = list()
+    for i in range(5):
+        for j in range(5):
+            if new_state[i][j] == dich:
+                lst_dich.append([i, j, False])
 
-    lst_1 = list()
+    def lien_ke(i, j, i1, j1):
+        lst = list()
+        k = i * 5 + j
+        if k % 2 == 0:
+            lst = [k-6, k-5, k-4, k-1, k+1, k+4, k+5, k+6]
+        else:
+            lst = [k-5, k-1, k+1, k+5]
+        if j1 - i1 in [-1, 0, 1] and i1*5+j1 in lst:
+            return True
+        return False
+
+    list_dich = list()
     for i in range(5):
         for j in range(5):
             if new_state[i][j] == dich:
-                lst_1.append((i, j))
-        
+                list_dich.append([i, j, False])
+
+    def traverse_CHET(startPos, currColor, oppColor, state, q = []):
+        state[ startPos[0] ][ startPos[1] ] = currColor
+        q.append(startPos)
+        for x in adjacentDict[ startPos[0]*5 + startPos[1] ]:
+            if (state[ x[0] ][ x[1] ] == '.') or ( state[ x[0] ][ x[1] ] == oppColor and ( not traverse_CHET(x, currColor, oppColor, state, q) ) ):
+                while(q[-1] != startPos):
+                    state[ q[-1][0] ][ q[-1][1] ] = oppColor
+                    q.pop()
+                state[ startPos[0] ][ startPos[1] ] = oppColor
+                q.pop()
+                return False
+        return True
+
     for i in range(5):
         for j in range(5):
             if new_state[i][j] == dich:
-                k = i*5+j
-                lst = list()
-                if k%2 == 0:
-                    lst = [k-6, k-5, k-4, k-1, k+1, k+4, k+5, k+6]
-                else:
-                    lst = [k-5, k-1, k+1, k+5]
-                num = 0
-                dong_doi = 0
-                for x in lst:
-                    if x <= 0 or x >= 24 or not x % 5 - j in [-1, 0, 1]:
-                        continue
-                    if new_state[int(x/5)][x%5] != '.':
-                        if new_state[int(x/5)][x%5] == new_state[i][j]:
-                            dong_doi += 1
-                        continue
-                    num += 1
-                if dong_doi == 0:
-                    num11 = 0
-                    for x in lst:
-                        if x <= 0 or x >= 24 or not x % 5 - j in [-1, 0, 1]:
-                            continue
-                        if state[int(x/5)][x%5] != '.':
-                            continue
-                        num11 += 1
-                    if num11 == 0:
-                        new_state[i][j] = ta
-                if num == 0:
-                    num11 = 0
-                    for x in lst:
-                        if x <= 0 or x >= 24 or not x % 5 - j in [-1, 0, 1]:
-                            continue
-                        if state[int(x/5)][x%5] != '.':
-                            continue
-                        num11 += 1
-                    if num11 != 0:
-                        new_state[i][j] = ta
+                traverse_CHET((i, j), ta, dich, new_state)
     return new_state
 
 #======================================================================

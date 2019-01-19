@@ -6,7 +6,7 @@ SIZE = 5
 PLAYERA = 'b'
 PLAYERB = 'r'
 EMPTY = '.'
-TIMELIMIT = 2.7
+TIMELIMIT = 0.05
 INF = math.inf
 
 # ======================== Class Player =======================================
@@ -185,6 +185,7 @@ class Board:
                     else:
                         self.num1 -= 2
                         self.num2 += 2
+        
         ## Chet
         for i in range(SIZE*SIZE):
             if self.board[i] != self.board[move[1]] and self.board[i] != 0:

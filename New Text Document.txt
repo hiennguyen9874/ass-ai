@@ -1,0 +1,5 @@
+﻿- định nghĩa trạng thái ma trận 5*5 : có thể tự chuyển sang trạng thái phù hợp với mình.
+- goal state: trạng thái kết thúc.
+- bước chuyển hợp lệ:
++ : không, gánh,chẹt
++ bẫy: gánh, chẹt bắt buộc phải đi. Nếu có hai bẫy -> thì đi vào bẫy nào cg được.
