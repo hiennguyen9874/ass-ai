@@ -11,3 +11,6 @@ Trong môn học chúng ta chỉ xét phiên bản có kích thước bàn cờ 
 Bắt buộc sử dụng ngôn ngữ Python để lập trình.
 Sinh viên tạo ra cho mình chương trình tự động chơi cờ gánh để đấu với các sinh viên khác.
 
+
+## Lưu ý
+- Luật cờ vây trong code hiện tại đang bị sai. Mọi người lưu ý.
